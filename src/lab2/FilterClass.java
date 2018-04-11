@@ -1,20 +1,27 @@
 package lab2;
 import java.lang.*;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+
 public class FilterClass implements Runnable {
 
-    private int primeNumber;
+    //private ExecutorService filterCrew;
+    //private Runnable nextFilter;
     private Thread nextFilter;
+
+    private int primeNumber;
     private ArrayBlockingQueue<Integer> myQueue;
     private ArrayBlockingQueue<Integer> previousQueue;
     private int queueSize;
 
 
-    FilterClass(int assignedPrimeNumber,int bufferSize,ArrayBlockingQueue<Integer>queueToBeConsumed)
+    FilterClass(int assignedPrimeNumber, int bufferSize, ArrayBlockingQueue<Integer>queueToBeConsumed/*, ExecutorService filterCrew*/)
     {
         this.primeNumber=assignedPrimeNumber;
         this.previousQueue=queueToBeConsumed;
         this.queueSize=bufferSize;
+        //this.filterCrew=filterCrew;
+        //System.out.println("Creo per "+primeNumber);
     }
 
     public void run()
@@ -32,8 +39,8 @@ public class FilterClass implements Runnable {
                         if ((numberUnderExamination % this.primeNumber) != 0) {
                             if (this.nextFilter == null) {
                                 this.myQueue = new ArrayBlockingQueue<Integer>(this.queueSize);
-                                nextFilter = new Thread(new FilterClass(numberUnderExamination, this.queueSize, this.myQueue));
-                                nextFilter.start();
+                                //filterCrew.execute(new FilterClass(numberUnderExamination,this.queueSize,myQueue,filterCrew));
+                                nextFilter = new Thread(new FilterClass(numberUnderExamination, this.queueSize, this.myQueue));nextFilter.start();
                             } else {
                                 this.myQueue.put(new Integer(numberUnderExamination));
                             }
