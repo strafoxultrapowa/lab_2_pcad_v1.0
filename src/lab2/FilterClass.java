@@ -5,9 +5,9 @@ import java.util.concurrent.ExecutorService;
 
 public class FilterClass implements Runnable {
 
-    //private ExecutorService filterCrew;
-    //private Runnable nextFilter;
-    private Thread nextFilter;
+    private ExecutorService filterCrew;
+    private Runnable nextFilter;
+   // private Thread nextFilter;
 
     private int primeNumber;
     private ArrayBlockingQueue<Integer> myQueue;
@@ -15,13 +15,13 @@ public class FilterClass implements Runnable {
     private int queueSize;
 
 
-    FilterClass(int assignedPrimeNumber, int bufferSize, ArrayBlockingQueue<Integer>queueToBeConsumed/*, ExecutorService filterCrew*/)
+    FilterClass(int assignedPrimeNumber, int bufferSize, ArrayBlockingQueue<Integer>queueToBeConsumed, ExecutorService filterCrew)
     {
         this.primeNumber=assignedPrimeNumber;
         this.previousQueue=queueToBeConsumed;
         this.queueSize=bufferSize;
-        //this.filterCrew=filterCrew;
-        //System.out.println("Creo per "+primeNumber);
+        this.filterCrew=filterCrew;
+        System.out.println("Creo per "+primeNumber);
     }
 
     public void run()
@@ -38,9 +38,9 @@ public class FilterClass implements Runnable {
                     else {
                         if ((numberUnderExamination % this.primeNumber) != 0) {
                             if (this.nextFilter == null) {
-                                this.myQueue = new ArrayBlockingQueue<Integer>(this.queueSize);
-                                //filterCrew.execute(new FilterClass(numberUnderExamination,this.queueSize,myQueue,filterCrew));
-                                nextFilter = new Thread(new FilterClass(numberUnderExamination, this.queueSize, this.myQueue));nextFilter.start();
+                                this.myQueue = new ArrayBlockingQueue<>(this.queueSize);
+                                filterCrew.execute(new FilterClass(numberUnderExamination,this.queueSize,myQueue,filterCrew));
+                                //nextFilter = new Thread(new FilterClass(numberUnderExamination, this.queueSize, this.myQueue));nextFilter.start();
                             } else {
                                 this.myQueue.put(new Integer(numberUnderExamination));
                             }

@@ -16,9 +16,8 @@ public class CrivelloEratostene {
         int filterClassBufferSize=Integer.parseInt(args[1]);
         ArrayBlockingQueue<Integer>myQueue=new ArrayBlockingQueue<>(filterClassBufferSize);
 
-        //ExecutorService filterCrew= Executors.newFixedThreadPool(7);
-        //filterCrew.execute(new FilterClass(2,10,myQueue,filterCrew));
-        Thread headFilters=new Thread(new FilterClass(2,filterClassBufferSize,myQueue));headFilters.start();
+        ExecutorService filterCrew= Executors.newFixedThreadPool(7);filterCrew.execute(new FilterClass(2,10,myQueue,filterCrew));
+       // Thread headFilters=new Thread(new FilterClass(2,filterClassBufferSize,myQueue));headFilters.start();
 
         try {
             for(int currentNumber=3;currentNumber<=n_max;currentNumber++)
