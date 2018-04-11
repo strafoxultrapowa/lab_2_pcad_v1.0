@@ -1,8 +1,8 @@
 package lab2;
 import java.lang.*;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
-
+import java.util.concurrent.LinkedBlockingQueue;
 public class FilterClass implements Runnable {
 
     private ExecutorService filterCrew;
@@ -10,18 +10,18 @@ public class FilterClass implements Runnable {
    // private Thread nextFilter;
 
     private int primeNumber;
-    private ArrayBlockingQueue<Integer> myQueue;
-    private ArrayBlockingQueue<Integer> previousQueue;
+    private BlockingQueue<Integer> myQueue;
+    private BlockingQueue<Integer> previousQueue;
     private int queueSize;
 
 
-    FilterClass(int assignedPrimeNumber, int bufferSize, ArrayBlockingQueue<Integer>queueToBeConsumed, ExecutorService filterCrew)
+    FilterClass(int assignedPrimeNumber, int bufferSize, BlockingQueue<Integer>queueToBeConsumed, ExecutorService filterCrew)
     {
         this.primeNumber=assignedPrimeNumber;
         this.previousQueue=queueToBeConsumed;
         this.queueSize=bufferSize;
         this.filterCrew=filterCrew;
-        System.out.println("Creo per "+primeNumber);
+        //System.out.println("Creo per "+primeNumber);
     }
 
     public void run()
@@ -31,6 +31,7 @@ public class FilterClass implements Runnable {
         while (!uscita) {
                 try {
                     numberUnderExamination = this.previousQueue.take();
+                    //System.out.println(numberUnderExamination);
                     if(numberUnderExamination<0)
                     {
                        uscita=true;
@@ -38,8 +39,9 @@ public class FilterClass implements Runnable {
                     else {
                         if ((numberUnderExamination % this.primeNumber) != 0) {
                             if (this.nextFilter == null) {
-                                this.myQueue = new ArrayBlockingQueue<>(this.queueSize);
-                                filterCrew.execute(new FilterClass(numberUnderExamination,this.queueSize,myQueue,filterCrew));
+                                this.myQueue = new LinkedBlockingQueue<>();
+                                this.nextFilter=new FilterClass(numberUnderExamination,this.queueSize,myQueue,filterCrew);
+                                filterCrew.execute(nextFilter);
                                 //nextFilter = new Thread(new FilterClass(numberUnderExamination, this.queueSize, this.myQueue));nextFilter.start();
                             } else {
                                 this.myQueue.put(new Integer(numberUnderExamination));

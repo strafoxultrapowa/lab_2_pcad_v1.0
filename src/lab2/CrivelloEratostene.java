@@ -1,10 +1,6 @@
 package lab2;
 import java.lang.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import java.util.concurrent.*;
 public class CrivelloEratostene {
     public static void main(String [] args)
     {
@@ -14,9 +10,9 @@ public class CrivelloEratostene {
         }
         int n_max=Integer.parseInt(args[0]);
         int filterClassBufferSize=Integer.parseInt(args[1]);
-        ArrayBlockingQueue<Integer>myQueue=new ArrayBlockingQueue<>(filterClassBufferSize);
+        BlockingQueue<Integer>myQueue=new LinkedBlockingDeque<Integer>();
 
-        ExecutorService filterCrew= Executors.newFixedThreadPool(7);filterCrew.execute(new FilterClass(2,10,myQueue,filterCrew));
+        ExecutorService filterCrew= Executors.newFixedThreadPool(3);filterCrew.execute(new FilterClass(2,10,myQueue,filterCrew));
        // Thread headFilters=new Thread(new FilterClass(2,filterClassBufferSize,myQueue));headFilters.start();
 
         try {
